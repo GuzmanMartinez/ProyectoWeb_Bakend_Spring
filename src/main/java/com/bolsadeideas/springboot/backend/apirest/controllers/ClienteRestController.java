@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+//import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolsadeideas.springboot.backend.apirest.models.entity.Cliente;
@@ -93,7 +93,7 @@ public class ClienteRestController {
 		Map<String,Object> response = new HashMap<>();
 		
 		if(clienteActual == null) {
-			response.put("mensaje", "Error: no se pudo editar el cliente ID: ".concat(id.toString().concat(", no existe ne la base de datos.")));
+			response.put("mensaje", "Error: no se pudo editar el cliente ID: ".concat(id.toString().concat(", no existe en la base de datos.")));
 			return new ResponseEntity<Map<String, Object>>(response,HttpStatus.NOT_FOUND);
 		}
 		
@@ -102,6 +102,8 @@ public class ClienteRestController {
 			clienteActual.setNombre(cliente.getNombre());
 			clienteActual.setEmail(cliente.getEmail());
 			clienteActual.setCreateAt(cliente.getCreateAt());
+			
+			clienteUpdate = clienteService.save(clienteActual);
 		}catch(DataAccessException e) {
 			response.put("mensaje", "Error al actualizar el cliente en la base de datos.");
 			response.put("error",e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
@@ -116,9 +118,20 @@ public class ClienteRestController {
 	}
 	
 	@DeleteMapping ("/clientes/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		clienteService.delete(id);
+	
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			clienteService.delete(id);
+		}catch(DataAccessException e) {
+			response.put("mensaje", "Error al eliminar el cliente.");
+			response.put("error",e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
+		}
+		response.put("mensaje", "El cliente fue eliminado con exito!");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);	
+		
 	}
 	
 	
