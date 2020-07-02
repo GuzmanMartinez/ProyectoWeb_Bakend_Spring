@@ -36,21 +36,24 @@ public class Cliente implements Serializable  {
 	@NotEmpty(message = "no puede estar vacio.")
 	@Size(min=4, max=12, message = "debe tener entre 4 y 12 carcteres.")
 	private String apellido;
-	@Column(nullable=false, unique=true)
+	@Column(nullable=false)//, unique=true)
 		
 	@NotEmpty(message = "no puede estar vacio.")
 	@Email(message = "debe tener un formato de email valido.")
 	private String email;
 	
+	@NotEmpty(message = "no puede estar vacio.")
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
+	/*
+	//Antes de Crear el usuario se inserta la fecha actual
 	@PrePersist
 	public void prePersist() {
 		createAt = new Date();
 	}
-	
+	*/
 	public long getId() {
 		return id;
 	}
