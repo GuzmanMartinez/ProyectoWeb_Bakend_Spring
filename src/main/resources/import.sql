@@ -1,4 +1,3 @@
-
 INSERT INTO clientes (nombre,apellido,email,create_at)VALUES ('Guzman','Martinez Santos','Guzman@email.net','2020-06-19');
 INSERT INTO clientes (nombre,apellido,email,create_at)VALUES ('Marta','Gimenez Muñoz','Marta@email.net','2016-12-29');
 INSERT INTO clientes (nombre,apellido,email,create_at)VALUES ('Antonio','Muñoz Martinez','Antonio@email.net','2005-06-01');
