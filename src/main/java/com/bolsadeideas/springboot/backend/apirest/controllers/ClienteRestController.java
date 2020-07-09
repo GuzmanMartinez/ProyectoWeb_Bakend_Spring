@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -51,6 +53,8 @@ public class ClienteRestController {
 	
 	@Autowired
 	private IClienteService clienteService;
+	
+	private final Logger log = LoggerFactory.getLogger(ClienteRestController.class);
 	
 	//@CrossOrigin ( origins ="http://localhost:4200")
 	@GetMapping("/clientes")
@@ -228,8 +232,9 @@ public class ClienteRestController {
 		
 		if(!archivo.isEmpty()) {
 			String nombreArchivo = UUID.randomUUID().toString() + "_" + archivo.getOriginalFilename().replace(" ","");
-			Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
 			
+			Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
+			log.info(rutaArchivo.toString());
 			try {
 				Files.copy(archivo.getInputStream(), rutaArchivo);
 			} catch (IOException e) {
@@ -264,11 +269,12 @@ public class ClienteRestController {
 	}
 	
 	/*
-	 * //La expresion :.+ inidca que el nombre del archivo contiene una extension
+	 * devuelve la foto cuyo nombre se le pase como parametro en la url
 	 */
-	@GetMapping("/uploads/img/{nombreFoto:.+")
+	@GetMapping("/uploads/img/{nombreFoto:.+}") //La expresion :.+ inidca que el nombre del archivo contiene una extension
 	public ResponseEntity<Resource> verFoto(@PathVariable String nombreFoto){
 		Path rutaArchivo = Paths.get("uploads").resolve(nombreFoto).toAbsolutePath();
+		log.info(rutaArchivo.toString());
 		
 		Resource recurso = null;
 		
